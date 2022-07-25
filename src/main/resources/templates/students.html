@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Reliable Cloud Services</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <a class="navbar-brand" href="#"> <img src = "../static/resources/images/rcslogo.png" th:src="@{/resources/images/rcslogo.png}" width = "" height = "100"></a>
+  ...
+</nav> 
+
+	<div class ="container">
+		<div class = "row">
+			<h1> List of Questions </h1>
+		</div>
+		
+		<div class = "row">
+			<div class = "col-lg-3">
+				<a th:href = "@{/questions/new}" class = "btn btn-primary btn-sm mb-3"> Add Questions</a>
+			
+			</div>
+				
+	<br/><br/>
+	<form th:action="@{/questions}">
+		Filter: <input type="text" name="keyword" id="keyword" size="50" th:value="${keyword}" required />
+		&nbsp;
+		<input type="submit" value="Search" />
+		&nbsp;
+		<input type="button" value="Clear" id="btnClear" onclick="clearSearch()" />
+	</form>
+	<br/><br/>
+	
+		</div>
+		
+		<table class = "table table-striped table-bordered">
+			<thead class = "table-dark">
+				<tr>
+					<th> Questions</th>
+					<th>Yes Votes</th>
+					<th>No Votes</th>
+					<th>Date Created</th>
+					<th> Actions </th>
+					
+				</tr>
+			</thead>
+			
+			<tbody>
+				<tr th:each = "question: ${listQuestions}">
+					<td th:text = "${question.list}"></td>
+					<td th:text = "${question.yes}"></td>
+					<td th:text = "${question.no}"></td>
+					<td th:text = "${question.date}"></td>
+					
+					<td>
+						<a th:href = "@{questions/bigger/{id}/{yes}(id=${question.id}, yes =${question.yes})}"
+						 class = "btn btn-success">Vote Yes</a>
+						<a th:href = "@{questions/some/{id}/{no}(id=${question.id}, no =${question.no})}"
+						 class = "btn btn-danger">Vote No</a>
+						<a th:href = "@{/questions/delete/{id}(id=${question.id})}"
+						 class = "btn btn-primary">Delete</a>
+						 <a th:href = "@{/questions/edit/{id}(id=${question.id})}"
+						 class = "btn btn-secondary">Edit</a>
+					</td>
+				</tr>
+			</tbody>
+		
+		</table>
+		<div th:if = "${totalPages > 1}">
+		   
+		   <div class = "row col-sm-10" >
+		   <div class = "col-sm-2" >
+		   	Total Rows: [[${totalItems}]]
+		     </div>
+		   <div class = "col-sm-1" >
+		   	<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a th:if="${currentPage != i}" th:href="@{'/page/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+						<span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
+					</span>
+		     </div>
+		   <div class = "col-sm-1" > 
+		   <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+					<span th:unless="${currentPage < totalPages}">Next</span>
+		    </div>
+		    <div class = "col-sm-1" > 
+		    	<a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+					<span th:unless="${currentPage < totalPages}">Last</span>
+		    </div>
+		   </div>
+		</div>
+		
+	</div>
+	<script type="text/javascript">
+	function clearSearch() {
+		window.location = "[[@{/}]]";
+	}
+</script>
+</body>
+</html>
